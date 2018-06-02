@@ -1,7 +1,7 @@
 
 var NebPay = require("nebpay");
 var nebPay = new NebPay();
-var dappAddress = "n1v8e45CvAZB3Uj6gHFPm3aEveSuzLse3Qm";
+var dappAddress = "n1yD5iCBq1E81AKygQshXn9aMByFVNjYm5h";
 
 if (typeof(webExtensionWallet) === "undefined") {
     alert("请首先安装webExtensionWallet插件");
@@ -107,7 +107,6 @@ jQuery(document).ready(function($) {
 
         $("#createNewBranch").on('click', function () {
             $("#SearchBox2").fadeIn("slow");
-            
         });
 
         $("#loginbtn2").on('click', function () {
@@ -116,10 +115,16 @@ jQuery(document).ready(function($) {
             var bra_name = $("#bra_name_2").val();
             var bra_addr = $("#bra_addr_2").val();
 
+            if(fac_name == null || fac_name == "" || bra_name == null || bra_name == "" || bra_addr == null || bra_addr == ""){
+                alert("所有字段都不能为空！");
+                return;
+            }
+
             var to = dappAddress;
             var value = "0";
             var callFunction = "AddPermission";
             var callArgs = "[\"" + fac_name + "\",\"" + bra_name + "\",\"" + bra_addr + "\"]";
+
             nebPay.call(to, value, callFunction, callArgs, {
                         listener: function(resp){
                             if( resp.txhash != null) alert("添加成功！");
@@ -129,24 +134,29 @@ jQuery(document).ready(function($) {
         });
 
         $("#showAllBranch").on('click', function () {
-            $("#SearchBox2").fadeOut("fast");
-            var fac_name = $("#fac_name_2").val();
-            var bra_name = $("#bra_name_2").val();
-            var bra_addr = $("#bra_addr_2").val();
+            $("#SearchBox3").fadeIn("slow");
+        });
+
+        $("#loginbtn3").on('click', function () {
+            $("#SearchBox3").fadeOut("fast");
+            var fac_name = $("#fac_name_3").val();
+
+            if(fac_name == null || fac_name == ""){
+                alert("字段都不能为空！");
+                return;
+            }
 
             var to = dappAddress;
             var value = "0";
-            var callFunction = "AddPermission";
-            var callArgs = "[\"" + fac_name + "\",\"" + bra_name + "\",\"" + bra_addr + "\"]";
-            nebPay.call(to, value, callFunction, callArgs, {
+            var callFunction = "searchPermission";
+            var callArgs = "[\"" + fac_name + "\"]";
+
+            nebPay.simulateCall(to, value, callFunction, callArgs, {
                         listener: function(resp){
-                            if( resp.txhash != null) alert("添加成功！");
-                            else alert("创建失败请重试！");
+                            alert(JSON.stringify(resp));
                         }
                     });
         });
-
-
 
       
         $(window).resize(function(){
@@ -196,5 +206,6 @@ function closeSearchBox(){
     $("#SearchBox").fadeOut("fast");
     $("#SearchBox1").fadeOut("fast");
     $("#SearchBox2").fadeOut("fast");
+    $("#SearchBox3").fadeOut("fast");
     $("#mask").css({ display: 'none' });
 }
