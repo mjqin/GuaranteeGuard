@@ -80,8 +80,14 @@
                             <h2>普通用户</h2>
                             <p>普通用户的功能主要是查看自身的所有保修单，同时也可以通过厂商总部提供的接口查询该厂商的所有分部授权情况。</p> 
 
-                            <h3>我的保修单</h3>
-                            
+                            <h3><div class="main-btn"><a href="#" id="showClient">查看我的保修单</a></div></h3>
+                            <p></p>
+                       <!--     <div class="col-md-6">
+                              <p>厂商名称：熊熊<br>分部名称：学校 <br>客户名称：兔兔<br></p>
+                            </div>
+                            -->
+                      
+
                             <div class="scene" id="loading" align="center">
   <svg version="1.1" id="dc-spinner" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width:"38"="" height:"38"="" viewBox="0 0 38 38" preserveAspectRatio="xMinYMin meet">
   <text x="14" y="21" font-family="Monaco" font-size="2px" style="letter-spacing:0.6" fill="white">正在加载
@@ -112,18 +118,12 @@
                             <span id="myOrder"></span>
                       </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="right-image">
-                          <img src="img/about_image.jpg" alt="">
-                      </div>
-                    </div>
                 </div>
             </div>
           </div>
           
           <div class="slide" id="3">
             <div class="content first-content">
-                <div class="container-fluid">
                     <div class="col-md-6">
                             <h2>厂商分部</h2>
                             <p>厂商分部在得到总部的授权之后，可以直接向用户提供服务。</p>
@@ -132,7 +132,36 @@
                             <div class="main-btn"><a href="#" id="createNewOrder">创建新保修单</a></div>
                             <div class="main-btn"><a href="#" id="showAllOrder">查看所有保修单</a></div>
                     </div>
-                </div>
+                    <div class="col-md-6" id="showAllOrderContent">
+
+                    <div class="scene" id="loading1" align="center">
+  <svg version="1.1" id="dc-spinner" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width:"38"="" height:"38"="" viewBox="0 0 38 38" preserveAspectRatio="xMinYMin meet">
+  <text x="14" y="21" font-family="Monaco" font-size="2px" style="letter-spacing:0.6" fill="white">正在加载
+     <animate attributeName="opacity" values="0;1;0" dur="1.8s" repeatCount="indefinite"></animate>
+  </text>
+  <path fill="#373a42" d="M20,35c-8.271,0-15-6.729-15-15S11.729,5,20,5s15,6.729,15,15S28.271,35,20,35z M20,5.203
+    C11.841,5.203,5.203,11.841,5.203,20c0,8.159,6.638,14.797,14.797,14.797S34.797,28.159,34.797,20
+    C34.797,11.841,28.159,5.203,20,5.203z">
+  </path>
+
+  <path fill="#373a42" d="M20,33.125c-7.237,0-13.125-5.888-13.125-13.125S12.763,6.875,20,6.875S33.125,12.763,33.125,20
+    S27.237,33.125,20,33.125z M20,7.078C12.875,7.078,7.078,12.875,7.078,20c0,7.125,5.797,12.922,12.922,12.922
+    S32.922,27.125,32.922,20C32.922,12.875,27.125,7.078,20,7.078z">
+  </path>
+
+  <path fill="#2AA198" stroke="#2AA198" stroke-width="0.6027" stroke-miterlimit="10" d="M5.203,20
+            c0-8.159,6.638-14.797,14.797-14.797V5C11.729,5,5,11.729,5,20s6.729,15,15,15v-0.203C11.841,34.797,5.203,28.159,5.203,20z" transform="rotate(358.225 20.0002 20.0002)">
+  <animatetransform attributeName="transform" type="rotate" from="0 20 20" to="360 20 20" calcMode="spline" keySplines="0.4, 0, 0.2, 1" keyTimes="0;1" dur="2s" repeatCount="indefinite"></animatetransform>      
+   </path>
+
+  <path fill="#859900" stroke="#859900" stroke-width="0.2027" stroke-miterlimit="10" d="M7.078,20
+  c0-7.125,5.797-12.922,12.922-12.922V6.875C12.763,6.875,6.875,12.763,6.875,20S12.763,33.125,20,33.125v-0.203
+  C12.875,32.922,7.078,27.125,7.078,20z" transform="rotate(122.499 20 20)">
+   <animatetransform attributeName="transform" type="rotate" from="0 20 20" to="360 20 20" dur="1.8s" repeatCount="indefinite"></animatetransform>
+    </path>
+  </svg>
+</div>
+                    </div>
             </div>
           </div>
 
@@ -142,9 +171,41 @@
                     <div class="col-md-6" >
                             <h2>厂商总部</h2>
                             <p>厂商总部可以管理所有分部的授权信息。</p>
-            
+                            <div class="main-btn"><a href="#" id="createNewCaptical">注册新总部</a></div>
                             <div class="main-btn"><a href="#" id="createNewBranch">授权新分部</a></div>
+                     <!--       <div class="main-btn"><a href="#" id="cancelBranch">取消分部授权</a></div> -->
+                            
                             <div class="main-btn"><a href="#" id="showAllBranch">查看所有分部信息</a></div>
+                    </div>
+
+                    <div class="col-md-6" id="showPermissionContent">
+                      <div class="scene" id="loading2" align="center">
+  <svg version="1.1" id="dc-spinner" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width:"38"="" height:"38"="" viewBox="0 0 38 38" preserveAspectRatio="xMinYMin meet">
+  <text x="14" y="21" font-family="Monaco" font-size="2px" style="letter-spacing:0.6" fill="white">正在加载
+     <animate attributeName="opacity" values="0;1;0" dur="1.8s" repeatCount="indefinite"></animate>
+  </text>
+  <path fill="#373a42" d="M20,35c-8.271,0-15-6.729-15-15S11.729,5,20,5s15,6.729,15,15S28.271,35,20,35z M20,5.203
+    C11.841,5.203,5.203,11.841,5.203,20c0,8.159,6.638,14.797,14.797,14.797S34.797,28.159,34.797,20
+    C34.797,11.841,28.159,5.203,20,5.203z">
+  </path>
+
+  <path fill="#373a42" d="M20,33.125c-7.237,0-13.125-5.888-13.125-13.125S12.763,6.875,20,6.875S33.125,12.763,33.125,20
+    S27.237,33.125,20,33.125z M20,7.078C12.875,7.078,7.078,12.875,7.078,20c0,7.125,5.797,12.922,12.922,12.922
+    S32.922,27.125,32.922,20C32.922,12.875,27.125,7.078,20,7.078z">
+  </path>
+
+  <path fill="#2AA198" stroke="#2AA198" stroke-width="0.6027" stroke-miterlimit="10" d="M5.203,20
+            c0-8.159,6.638-14.797,14.797-14.797V5C11.729,5,5,11.729,5,20s6.729,15,15,15v-0.203C11.841,34.797,5.203,28.159,5.203,20z" transform="rotate(358.225 20.0002 20.0002)">
+  <animatetransform attributeName="transform" type="rotate" from="0 20 20" to="360 20 20" calcMode="spline" keySplines="0.4, 0, 0.2, 1" keyTimes="0;1" dur="2s" repeatCount="indefinite"></animatetransform>      
+   </path>
+
+  <path fill="#859900" stroke="#859900" stroke-width="0.2027" stroke-miterlimit="10" d="M7.078,20
+  c0-7.125,5.797-12.922,12.922-12.922V6.875C12.763,6.875,6.875,12.763,6.875,20S12.763,33.125,20,33.125v-0.203
+  C12.875,32.922,7.078,27.125,7.078,20z" transform="rotate(122.499 20 20)">
+   <animatetransform attributeName="transform" type="rotate" from="0 20 20" to="360 20 20" dur="1.8s" repeatCount="indefinite"></animatetransform>
+    </path>
+  </svg>
+</div>
                     </div>
 
                 </div>
@@ -248,6 +309,21 @@
         </div>
     </div>
 
+    <div id="SearchBox4">
+        <div class="firstrow">
+           星云保修卫士
+            <a href="javascript:void(0)" title="关闭窗口" class="close_btn">×</a>
+        </div>
+        <div class="followrow">
+            厂商名称：<span class="inputBox" >
+                <input type="text" id="fac_name_4" class="text" placeholder="请输入厂商总部名称" />
+        </div>
+
+        <div class="followrow">
+            <a href="#" id="loginbtn4">创建</a>
+        </div>
+    </div>
+
     <div id="OrderBox">
         <div class="firstrow">
            创建新保修单
@@ -274,8 +350,8 @@
         </div>
 
         <div class="followrow">
-            有效时长：<span class="inputBox">
-                <input type="text" id="valid_time" class="text" placeholder="有效期时长" />
+            有效期至：<span class="inputBox">
+                <input type="text" id="valid_time" class="text" placeholder="有效期截止日期" />
         </div>
 
         <div class="followrow">
@@ -300,44 +376,5 @@
     <script src="js/main.js"></script>
 
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>
-    <script type="text/javascript">
-    $(document).ready(function() {
-
-        
-
-        // navigation click actions 
-        $('.scroll-link').on('click', function(event){
-            event.preventDefault();
-            var sectionID = $(this).attr("data-id");
-            scrollToID('#' + sectionID, 750);
-        });
-        // scroll to top action
-        $('.scroll-top').on('click', function(event) {
-            event.preventDefault();
-            $('html, body').animate({scrollTop:0}, 'slow');         
-        });
-        // mobile nav toggle
-        $('#nav-toggle').on('click', function (event) {
-            event.preventDefault();
-            $('#main-nav').toggleClass("open");
-        });
-    });
-    // scroll function
-    function scrollToID(id, speed){
-        var offSet = 0;
-        var targetOffset = $(id).offset().top - offSet;
-        var mainNav = $('#main-nav');
-        $('html,body').animate({scrollTop:targetOffset}, speed);
-        if (mainNav.hasClass("open")) {
-            mainNav.css("height", "1px").removeClass("in").addClass("collapse");
-            mainNav.removeClass("open");
-        }
-    }
-    if (typeof console === "undefined") {
-        console = {
-            log: function() { }
-        };
-    }
-    </script>
 </body>
 </html>

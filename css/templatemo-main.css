@@ -417,8 +417,8 @@ nav a:hover::before {
 }
 
 .second-content .right-image img {
-	max-width: 100%;
-	min-width: 100%;
+	max-width: 89%;
+	min-width: 89%;
 	overflow: hidden;
 	float: right;
 }
@@ -439,6 +439,10 @@ nav a:hover::before {
 	padding-bottom: 10px;
 	margin-bottom: 20px;
 	margin-top: 0px;
+}
+
+#showPermissionContent p{
+	text-transform: none;
 }
 
 .second-content p {

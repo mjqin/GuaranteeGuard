@@ -1,7 +1,7 @@
 
 var NebPay = require("nebpay");
 var nebPay = new NebPay();
-var dappAddress = "n1yD5iCBq1E81AKygQshXn9aMByFVNjYm5h";
+var dappAddress = "n1hfkz1HTBT5tUkAFXX7WVmVx9vXr52knco";
 
 if (typeof(webExtensionWallet) === "undefined") {
     alert("请首先安装webExtensionWallet插件");
@@ -58,9 +58,14 @@ jQuery(document).ready(function($) {
             // find how far it is from current slide
             var diff = newslide - currSlide - 1;
             showSlide(newslide); // show that slide
-
-            if(newslide == 2){
-                showSearchBox();
+            if(newslide==2){
+                $("#loading").css({display: 'none'});
+            }
+            if(newslide==3){
+                $("#loading1").css({display: 'none'});
+            }
+            if(newslide==4){
+                $("#loading2").css({display: 'none'});
             }
             e.preventDefault();
         });
@@ -81,14 +86,50 @@ jQuery(document).ready(function($) {
             closeSearchBox();
         });
 
-        function searchHandle(resp){
-            alert(JSON.parse(resp));
-            $("#loading").css({display: 'none'});
+        function addOrder(order){
+            var manufacturer = order.manufacturer,
+                branch = order.branch,
+                client = order.client,
+                product = order.product,
+                createTime = order.createTime,
+                validTime = order.validTime,
+                guaranteeContent = order.guaranteeContent,
+                status = order.status;
+            var statusContent;
+            if(status) statusContent = "有效";
+            else statusContent = "已过期";
+            var content = "<div class=\"col-md-6\"><p>" + 
+                "厂商名称：" + manufacturer + "</br>" + 
+                "分部名称：" + branch + " </br>" + 
+                "客户名称：" + client + "</br>"  + 
+                "产品名称：" + product + "</br>" + 
+                "创建时间：" + createTime + "</br>" + 
+                "有效期至：" + validTime + "</br>" + 
+                "保修内容：" + guaranteeContent + "</br>" + 
+                "状态：" + statusContent + "</br>" + 
+                "</p></div>"
+            $("#myOrder").append(content);
         }
+
+        function searchHandle(resp){
+        //    alert(JSON.stringify(resp));
+            $("#loading").css({display: 'none'});
+            if(resp == null || resp.execute_err != "") {
+                    alert(resp.execute_err);
+                    return;
+                }
+            var result = JSON.parse(resp.result);
+            for(var i in result){
+                addOrder(result[i]);
+            }
+        }
+
+        $("#showClient").on('click', function () {
+            showSearchBox();
+        });
 
         $("#createNewOrder").on('click', function () {
             $("#OrderBox").fadeIn("slow");
-            
         });
 
         $(".close_btn1").hover(function () { $(this).css({ color: 'black' }) }, function () { $(this).css({ color: '#999' }) }).on('click', function(){
@@ -97,13 +138,104 @@ jQuery(document).ready(function($) {
 
         $("#createBtn").on('click', function () {
             $("#OrderBox").fadeOut("fast");
-            
+            var name = $("#name").val();
+            var branch_name = $("#branch_name").val();
+            var client = $("#client").val();
+            var product = $("#product").val();
+            var valid_time = $("#valid_time").val();
+            var content = $("#content").val();
+
+            if(name == null || name == "" 
+                || branch_name == null || branch_name == "" 
+                || client == null || client == ""
+                || product == null || product == "" 
+                || valid_time == null || valid_time == "" 
+                || content == null || content == ""  ){
+                alert("所有字段都不能为空！");
+                return;
+            }
+
+            var createTime = new Date().toLocaleDateString();
+
+            var to = dappAddress;
+            var value = "0";
+            var callFunction = "CreateNewGuarantee";
+            var callArgs = "[\"" + name + "\",\"" + branch_name + "\",\"" + client + "\",\"" + 
+                                product + "\",\"" + createTime + "\",\"" + valid_time + "\",\"" + content + "\"]";
+            nebPay.call(to, value, callFunction, callArgs, {
+                listener: createHandle
+            });
         });
+
+        function createHandle(resp){
+          //  alert(JSON.stringify(resp));
+            if( resp.txhash != null) alert("创建成功！");
+            else alert("创建失败请重试！");
+        }
 
         $("#showAllOrder").on('click', function () {
             $("#SearchBox1").fadeIn("slow");
-            
         });
+
+        $("#loginbtn1").on('click', function () {
+            var fac_name = $("#fac_name_1").val();
+            var bra_name = $("#bra_name_1").val();
+            if(fac_name == null || fac_name == "" || bra_name == null || bra_name == ""){
+                alert("所有字段都不能为空！");
+                return;
+            }
+            var to = dappAddress;
+            var value = "0";
+            var callFunction = "searchBranchGuarantee";
+            var callArgs = "[\"" + fac_name + "\",\"" + bra_name + "\"]";
+            $("#SearchBox1").fadeOut("fast");
+            $("#loading1").css({display: 'block'});
+            nebPay.simulateCall(to, value, callFunction, callArgs, {
+                        listener: showAllHandle
+                    });
+        });
+
+        function showAllHandle(resp){
+            if(resp == null ){
+                alert("查询失败，请重试");
+                return;
+            }
+            if(resp.execute_err != ""){
+                alert(resp.execute_err);
+                return;
+            }
+            var result = JSON.parse(resp.result);
+            $("#loading1").css({display: 'none'});
+            for(var i in result){
+                addBranchOrder(result[i]);
+            }
+        }
+
+        function addBranchOrder(order){
+            var manufacturer = order.manufacturer,
+                branch = order.branch,
+                client = order.client,
+                product = order.product,
+                createTime = order.createTime,
+                validTime = order.validTime,
+                guaranteeContent = order.guaranteeContent,
+                status = order.status;
+            var statusContent;
+            if(status) statusContent = "有效";
+            else statusContent = "已过期";
+            var content = "<div class=\"col-md-6\"><p>" + 
+                "厂商名称：" + manufacturer + "</br>" + 
+                "分部名称：" + branch + " </br>" + 
+                "客户名称：" + client + "</br>"  + 
+                "产品名称：" + product + "</br>" + 
+                "创建时间：" + createTime + "</br>" + 
+                "有效期至：" + validTime + "</br>" + 
+                "保修内容：" + guaranteeContent + "</br>" + 
+                "状态：" + statusContent + "</br>" + 
+                "</p></div>"
+            $("#showAllOrderContent").append(content);
+
+        }
 
         $("#createNewBranch").on('click', function () {
             $("#SearchBox2").fadeIn("slow");
@@ -150,10 +282,74 @@ jQuery(document).ready(function($) {
             var value = "0";
             var callFunction = "searchPermission";
             var callArgs = "[\"" + fac_name + "\"]";
-
+            $("#loading2").css({display: 'block'});
+            $("#warning1").text("");
             nebPay.simulateCall(to, value, callFunction, callArgs, {
+                        listener: showPermissionHandle
+                    });
+        });
+
+        function showPermissionHandle(resp){
+            $("#loading2").css({display: 'none'});
+            if(resp == null) {
+                alert("执行失败，请重试");
+                return;
+            }
+            if(resp.execute_err != ""){
+                alert(resp.execute_err);
+                return;
+            }
+            var result = JSON.parse(resp.result);
+            if(result.length == 0){
+                var content = "<div class=\"col-md-12\"><p id=\"warning1\">" + 
+                    "暂无分部，请给分部授予权限。"
+                    "</p></div>";
+                $("#showPermissionContent").append(content);
+            }else{
+                for(var i in result){
+                    addPermissions(result[i]);
+                }
+            }
+            
+        }
+
+        function addPermissions(branch){
+            var name = branch.name, 
+                addr = branch.addr, 
+                isValid = branch.valid;
+
+            var statusContent;
+            if(isValid) statusContent = "权限有效";
+            else statusContent = "权限已过期";
+            var content = "<div class=\"col-md-12\"><p>" + 
+                "分部名称：" + name + " </br>" + 
+                "分部地址：" + addr + "</br>"  + 
+                "状态：" + statusContent + "</br>" + 
+                "</p></div>"
+            $("#showPermissionContent").append(content);
+        }
+
+        $("#createNewCaptical").on('click', function () {
+            $("#SearchBox4").fadeIn("slow");
+        });
+
+        $("#loginbtn4").on('click', function () {
+            $("#SearchBox4").fadeOut("fast");
+            var fac_name = $("#fac_name_4").val();
+
+            if(fac_name == null || fac_name == ""){
+                alert("字段不能为空！");
+                return;
+            }
+
+            var to = dappAddress;
+            var value = "0";
+            var callFunction = "CreateManufacturer";
+            var callArgs = "[\"" + fac_name + "\"]";
+            nebPay.call(to, value, callFunction, callArgs, {
                         listener: function(resp){
-                            alert(JSON.stringify(resp));
+                            if( resp.txhash != null) alert("创建成功！");
+                            else alert("创建失败请重试！");
                         }
                     });
         });
@@ -207,5 +403,6 @@ function closeSearchBox(){
     $("#SearchBox1").fadeOut("fast");
     $("#SearchBox2").fadeOut("fast");
     $("#SearchBox3").fadeOut("fast");
+    $("#SearchBox4").fadeOut("fast");
     $("#mask").css({ display: 'none' });
 }
