@@ -1,7 +1,7 @@
 
 var NebPay = require("nebpay");
 var nebPay = new NebPay();
-var dappAddress = "n1hfkz1HTBT5tUkAFXX7WVmVx9vXr52knco";
+ var dappAddress = "n1hfkz1HTBT5tUkAFXX7WVmVx9vXr52knco";
 
 if (typeof(webExtensionWallet) === "undefined") {
     alert("请首先安装webExtensionWallet插件");
@@ -189,6 +189,7 @@ jQuery(document).ready(function($) {
             var callFunction = "searchBranchGuarantee";
             var callArgs = "[\"" + fac_name + "\",\"" + bra_name + "\"]";
             $("#SearchBox1").fadeOut("fast");
+            $("#warning2").text("");
             $("#loading1").css({display: 'block'});
             nebPay.simulateCall(to, value, callFunction, callArgs, {
                         listener: showAllHandle
@@ -196,6 +197,7 @@ jQuery(document).ready(function($) {
         });
 
         function showAllHandle(resp){
+            $("#loading1").css({display: 'none'});
             if(resp == null ){
                 alert("查询失败，请重试");
                 return;
@@ -205,9 +207,16 @@ jQuery(document).ready(function($) {
                 return;
             }
             var result = JSON.parse(resp.result);
-            $("#loading1").css({display: 'none'});
-            for(var i in result){
-                addBranchOrder(result[i]);
+            if(result.length == 0){
+                var content = "<div class=\"col-md-12\"><p id=\"warning2\">" + 
+                    "该分部还未发出任何保修单，请尝试给用户发出新保修单。" + 
+                "</p></div>";
+                $("#showAllOrderContent").append(content);
+            }
+            else{
+                for(var i in result){
+                    addBranchOrder(result[i]);
+                }
             }
         }
 
