@@ -80,6 +80,7 @@ jQuery(document).ready(function($) {
             var callFunction = "searchClient";
             var callArgs = "[\"" + client_name + "\"]";
             $("#loading").css({display: 'block'});
+            $("#myOrder").text("");
             nebPay.simulateCall(to, value, callFunction, callArgs, {
                 listener: searchHandle
             });
@@ -190,6 +191,7 @@ jQuery(document).ready(function($) {
             var callArgs = "[\"" + fac_name + "\",\"" + bra_name + "\"]";
             $("#SearchBox1").fadeOut("fast");
             $("#warning2").text("");
+            $("#showAllOrderContent").text("");
             $("#loading1").css({display: 'block'});
             nebPay.simulateCall(to, value, callFunction, callArgs, {
                         listener: showAllHandle
@@ -291,6 +293,7 @@ jQuery(document).ready(function($) {
             var value = "0";
             var callFunction = "searchPermission";
             var callArgs = "[\"" + fac_name + "\"]";
+            $("#showPermissionContent").text("");
             $("#loading2").css({display: 'block'});
             $("#warning1").text("");
             nebPay.simulateCall(to, value, callFunction, callArgs, {
