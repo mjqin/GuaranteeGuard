@@ -1,7 +1,26 @@
+var chainnetConfig = {
+    mainnet: {
+        name: "主网",
+        contractAddress: "n1hfkz1HTBT5tUkAFXX7WVmVx9vXr52knco",
+        host: "https://mainnet.nebulas.io",
+        payhost: "https://pay.nebulas.io/api/mainnet/pay"
+    }
+}
+
+var chainInfo = chainnetConfig["mainnet"];
+var HttpRequest = require("nebulas").HttpRequest;
+var Neb = require("nebulas").Neb;
+var Unit = require("nebulas").Unit;
+var Utils = require("nebulas").Utils;
+
+var myneb = new Neb();
+myneb.setRequest(new HttpRequest(chainInfo.host));
+var nasApi = myneb.api;
+
 
 var NebPay = require("nebpay");
 var nebPay = new NebPay();
- var dappAddress = "n1hfkz1HTBT5tUkAFXX7WVmVx9vXr52knco";
+var dappAddress = chainInfo.contractAddress;
 
 if (typeof(webExtensionWallet) === "undefined") {
     alert("请首先安装webExtensionWallet插件");
@@ -131,14 +150,17 @@ jQuery(document).ready(function($) {
 
         $("#createNewOrder").on('click', function () {
             $("#OrderBox").fadeIn("slow");
+            $("#mask").fadeIn("slow");
         });
 
         $(".close_btn1").hover(function () { $(this).css({ color: 'black' }) }, function () { $(this).css({ color: '#999' }) }).on('click', function(){
             $("#OrderBox").fadeOut("fast");
+            $("#mask").css({ display: 'none' });
         });
 
         $("#createBtn").on('click', function () {
             $("#OrderBox").fadeOut("fast");
+            $("#spinner").fadeIn("slow");
             var name = $("#name").val();
             var branch_name = $("#branch_name").val();
             var client = $("#client").val();
@@ -166,19 +188,54 @@ jQuery(document).ready(function($) {
             nebPay.call(to, value, callFunction, callArgs, {
                 listener: createHandle
             });
+            
         });
+
+        function checkTxStatus(txhash){
+              var timerId = setInterval(function(){
+                nasApi.getTransactionReceipt({
+                    hash:txhash
+                }).then(function(receipt){
+                    if(receipt.status == 1){
+                        clearInterval(timerId);
+                        var res = receipt.execute_result;
+                        console.log("status:"+res);
+                        alert("创建成功！");
+                        $("#spinner").css({ display: 'none' });
+                        $("#mask").css({ display: 'none' });
+                    }else if(receipt.status == 0){
+                        clearInterval(timerId);
+                        console.log("status err:"+receipt.execute_error);
+                        alert(receipt.execute_error);
+                        $("#spinner").css({ display: 'none' });
+                        $("#mask").css({ display: 'none' });
+                    }
+                    
+                }).catch(function(err){
+                    console.log("check error");
+                });
+            },3*1000);
+        }
 
         function createHandle(resp){
           //  alert(JSON.stringify(resp));
-            if( resp.txhash != null) alert("创建成功！");
-            else alert("创建失败请重试！");
+            if( resp.txhash != null) {
+                checkTxStatus(resp.txhash);
+            }
+            else {
+                alert("创建失败请重试！");
+                $("#mask").css({ display: 'none' });
+                $("#spinner").css({ display: 'none' });
+            }
         }
 
         $("#showAllOrder").on('click', function () {
             $("#SearchBox1").fadeIn("slow");
+            $("#mask").css({ display: 'block' });
         });
 
         $("#loginbtn1").on('click', function () {
+            $("#mask").css({ display: 'none' });
             var fac_name = $("#fac_name_1").val();
             var bra_name = $("#bra_name_1").val();
             if(fac_name == null || fac_name == "" || bra_name == null || bra_name == ""){
@@ -250,10 +307,12 @@ jQuery(document).ready(function($) {
 
         $("#createNewBranch").on('click', function () {
             $("#SearchBox2").fadeIn("slow");
+            $("#mask").css({ display: 'block' });
         });
 
         $("#loginbtn2").on('click', function () {
             $("#SearchBox2").fadeOut("fast");
+            $("#spinner").css({ display: 'block' });
             var fac_name = $("#fac_name_2").val();
             var bra_name = $("#bra_name_2").val();
             var bra_addr = $("#bra_addr_2").val();
@@ -270,18 +329,27 @@ jQuery(document).ready(function($) {
 
             nebPay.call(to, value, callFunction, callArgs, {
                         listener: function(resp){
-                            if( resp.txhash != null) alert("添加成功！");
-                            else alert("创建失败请重试！");
+                            if( resp.txhash != null) {
+                                checkTxStatus(resp.txhash);
+                            }
+                            else {
+                                alert("创建失败请重试！");
+                                $("#mask").css({ display: 'none' });
+                                $("#spinner").css({ display: 'none' });
+                            }
                         }
                     });
+
         });
 
         $("#showAllBranch").on('click', function () {
             $("#SearchBox3").fadeIn("slow");
+            $("#mask").css({ display: 'block' });
         });
 
         $("#loginbtn3").on('click', function () {
             $("#SearchBox3").fadeOut("fast");
+            $("#mask").css({ display: 'none' });
             var fac_name = $("#fac_name_3").val();
 
             if(fac_name == null || fac_name == ""){
@@ -343,10 +411,12 @@ jQuery(document).ready(function($) {
 
         $("#createNewCaptical").on('click', function () {
             $("#SearchBox4").fadeIn("slow");
+            $("#mask").css({ display: 'block' });
         });
 
         $("#loginbtn4").on('click', function () {
             $("#SearchBox4").fadeOut("fast");
+            $("#spinner").css({ display: 'block' });
             var fac_name = $("#fac_name_4").val();
 
             if(fac_name == null || fac_name == ""){
@@ -360,8 +430,14 @@ jQuery(document).ready(function($) {
             var callArgs = "[\"" + fac_name + "\"]";
             nebPay.call(to, value, callFunction, callArgs, {
                         listener: function(resp){
-                            if( resp.txhash != null) alert("创建成功！");
-                            else alert("创建失败请重试！");
+                            if( resp.txhash != null) {
+                                checkTxStatus(resp.txhash);
+                            }
+                            else {
+                                alert("创建失败请重试！");
+                                $("#mask").css({ display: 'none' });
+                                $("#spinner").css({ display: 'none' });
+                            }
                         }
                     });
         });
